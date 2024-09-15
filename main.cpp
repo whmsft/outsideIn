@@ -33,12 +33,16 @@ int main(void) {
   SetConfigFlags(FLAG_WINDOW_RESIZABLE);
   playerAbove = true;
   #if defined(PLATFORM_WEB)
-    InitWindow(320, 640, "strontium");
+    InitWindow(320, 640, "outsideIn");
     emscripten_set_main_loop(UpdateDraw, 0, 1);
   #else
-    InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "strontium");
+    if (GetMonitorWidth(GetCurrentMonitor())<GetMonitorHeight(GetCurrentMonitor())) {
+      InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "outsideIn");
+      ToggleFullscreen();
+    } else {
+      InitWindow(320,640,"outsideIn");
+    }
     SetTargetFPS(30);
-    ToggleFullscreen();
     while (!WindowShouldClose()) {
       UpdateDraw();
     }
@@ -54,12 +58,14 @@ void UpdateDraw(void) {
 
   // Initialize player position on the first frame
   if (frame == 0) {
+    objectsAbove.clear();
+    objectsBelow.clear();
     playerX = screenWidth / 2 - screenWidth / 40;
     playerY = screenHeight / 3;
     moveSpeed = screenWidth / 100;
   }
 
-  fallVelocity += playerAbove ? screenWidth/40 : -screenWidth/40;
+  fallVelocity += playerAbove ? screenWidth/80 : -screenWidth/80;
 
   // Collision with platform
   if (collide(playerX, playerY, screenWidth / 20, screenWidth / 20, screenWidth / 4, screenHeight / 2 - screenWidth / 20, screenWidth / 2, screenWidth / 10)) {
@@ -83,7 +89,9 @@ void UpdateDraw(void) {
   if ((((IsMouseButtonDown(MOUSE_LEFT_BUTTON) || IsGestureDetected(GESTURE_TAP)) && isLeftHalf) || IsKeyDown(KEY_LEFT)) && !collideRight) {
     playerX -= moveSpeed;
   }
-
+  if (playerX>screenWidth-screenWidth/40) playerX = -screenWidth/40;
+  if (playerX<-screenWidth/40) playerX = screenWidth-screenWidth/40;
+  
   // Object generation
   if (objectsAboveCooldown == 0) {
     objectsAbove.push_back({ GetRandomValue(-screenWidth/20,screenWidth), 0, GetRandomValue(1,5) });
@@ -108,11 +116,13 @@ void UpdateDraw(void) {
     DrawRectangle(object[0], object[1], screenWidth / 20, screenWidth / 20, PRIMARY);
     object[1] -= object[2]*moveSpeed;
     if (object[1] < screenHeight/2) {objectsBelow.erase(objectsBelow.begin() + i);} else {++i;}
+    if (collide(object[0],object[1],screenWidth/20,screenWidth/20,playerX,playerY,screenWidth/20,screenWidth/20)) {SCORE=0;frame=-1;}
   }
   for (auto i = 0; i < objectsAbove.size(); ) {auto& object = objectsAbove[i];
     DrawRectangle(object[0], object[1], screenWidth / 20, screenWidth / 20, SECONDARY);
     object[1] += object[2]*moveSpeed;
     if (object[1] > screenHeight/2-screenWidth/20) {objectsAbove.erase(objectsAbove.begin() + i);} else {++i;}
+    if (collide(object[0],object[1],screenWidth/20,screenWidth/20,playerX,playerY,screenWidth/20,screenWidth/20)) {SCORE=0;frame=-1;}
   }
 
   // Debug info
