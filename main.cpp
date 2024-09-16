@@ -36,12 +36,8 @@ int main(void) {
     InitWindow(320, 640, "outsideIn");
     emscripten_set_main_loop(UpdateDraw, 0, 1);
   #else
-    if (GetMonitorWidth(GetCurrentMonitor())<GetMonitorHeight(GetCurrentMonitor())) {
-      InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "outsideIn");
-      ToggleFullscreen();
-    } else {
-      InitWindow(320,640,"outsideIn");
-    }
+    InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "outsideIn");
+    //ToggleFullscreen();
     SetTargetFPS(30);
     while (!WindowShouldClose()) {
       UpdateDraw();
@@ -62,6 +58,7 @@ void UpdateDraw(void) {
 		DrawRectangle(0,screenHeight/2,screenWidth,screenHeight/2,SECONDARY);
 		DrawText("PLAY",screenWidth/2-MeasureText("PLAY",screenHeight/10)/2,0.75*screenHeight-screenWidth/10,screenHeight/10,PRIMARY);
     EndDrawing();
+		if (collide(GetMouseX(), GetMouseY(), 1, 1, 0, screenHeight/2, screenWidth, screenHeight/2) && (IsMouseButtonDown(MOUSE_BUTTON_LEFT) || IsGestureDetected(GESTURE_TAP))) SCREEN = 1;
   } else if (SCREEN == 1) {
     // Initialize player position on the first frame
     if (frame == 0) {
@@ -123,13 +120,13 @@ void UpdateDraw(void) {
       DrawRectangle(object[0], object[1], screenWidth / 20, screenWidth / 20, PRIMARY);
       object[1] -= object[2]*moveSpeed;
       if (object[1] < screenHeight/2) {objectsBelow.erase(objectsBelow.begin() + i);} else {++i;}
-      if (collide(object[0],object[1],screenWidth/20,screenWidth/20,playerX,playerY,screenWidth/20,screenWidth/20)) {SCORE=0;frame=-1;}
+      if (collide(object[0],object[1],screenWidth/20,screenWidth/20,playerX,playerY,screenWidth/20,screenWidth/20)) {SCORE=0;frame=-1;SCREEN=0;}
     }
     for (auto i = 0; i < objectsAbove.size(); ) {auto& object = objectsAbove[i];
       DrawRectangle(object[0], object[1], screenWidth / 20, screenWidth / 20, SECONDARY);
       object[1] += object[2]*moveSpeed;
       if (object[1] > screenHeight/2-screenWidth/20) {objectsAbove.erase(objectsAbove.begin() + i);} else {++i;}
-      if (collide(object[0],object[1],screenWidth/20,screenWidth/20,playerX,playerY,screenWidth/20,screenWidth/20)) {SCORE=0;frame=-1;}
+      if (collide(object[0],object[1],screenWidth/20,screenWidth/20,playerX,playerY,screenWidth/20,screenWidth/20)) {SCORE=0;frame=-1;SCREEN=0;}
     }
   
     // Debug info
