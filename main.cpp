@@ -58,17 +58,15 @@ void UpdateDraw(void) {
 		DrawRectangle(0,screenHeight/2,screenWidth,screenHeight/2,SECONDARY);
 		DrawText("PLAY",screenWidth/2-MeasureText("PLAY",screenHeight/10)/2,0.75*screenHeight-screenWidth/10,screenHeight/10,PRIMARY);
     EndDrawing();
-		if (collide(GetMouseX(), GetMouseY(), 1, 1, 0, screenHeight/2, screenWidth, screenHeight/2) && (IsMouseButtonDown(MOUSE_BUTTON_LEFT) || IsGestureDetected(GESTURE_TAP))) SCREEN = 1;
-  } else if (SCREEN == 1) {
-    // Initialize player position on the first frame
-    if (frame == 0) {
+		if (collide(GetMouseX(), GetMouseY(), 1, 1, 0, screenHeight/2, screenWidth, screenHeight/2) && (IsMouseButtonDown(MOUSE_BUTTON_LEFT))) {
+      SCREEN = 1;
       objectsAbove.clear();
       objectsBelow.clear();
       playerX = screenWidth / 2 - screenWidth / 40;
       playerY = screenHeight / 3;
       moveSpeed = screenWidth / 100;
     }
-  
+  } else if (SCREEN == 1) {
     fallVelocity += playerAbove ? screenWidth/80 : -screenWidth/80;
 
     // Collision with platform
@@ -87,10 +85,10 @@ void UpdateDraw(void) {
     bool isLeftHalf = (GetMouseX() <= screenWidth / 2 || GetTouchX() <= screenWidth / 2); 
     bool collideRight = collideSideways(playerX-moveSpeed, playerY, screenWidth/20, screenWidth/20, screenWidth/4, screenHeight/2-screenWidth/20, screenWidth/2, screenWidth/10);
     bool collideLeft = collideSideways(playerX+moveSpeed, playerY, screenWidth/20, screenWidth/20, screenWidth/4, screenHeight/2-screenWidth/20, screenWidth/2, screenWidth/10);
-    if ((((IsMouseButtonDown(MOUSE_LEFT_BUTTON) || IsGestureDetected(GESTURE_TAP)) && isRightHalf) || IsKeyDown(KEY_RIGHT)) && !collideLeft) {
+    if ((((IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsGestureDetected(GESTURE_TAP)) && isRightHalf) || IsKeyDown(KEY_RIGHT)) && !collideLeft) {
       playerX += moveSpeed;
     }
-    if ((((IsMouseButtonDown(MOUSE_LEFT_BUTTON) || IsGestureDetected(GESTURE_TAP)) && isLeftHalf) || IsKeyDown(KEY_LEFT)) && !collideRight) {
+    if ((((IsMouseButtonPressed(MOUSE_LEFT_BUTTON) || IsGestureDetected(GESTURE_TAP)) && isLeftHalf) || IsKeyDown(KEY_LEFT)) && !collideRight) {
       playerX -= moveSpeed;
     }
     if (playerX>screenWidth-screenWidth/40) playerX = -screenWidth/40;
