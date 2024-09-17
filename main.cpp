@@ -37,9 +37,9 @@ int main(void) {
     InitWindow(320, 640, "outsideIn");
     emscripten_set_main_loop(UpdateDraw, 0, 1);
   #else
-    InitWindow(320, 640, "outsideIn");
-    //InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "outsideIn");
-    //ToggleFullscreen();
+    //InitWindow(360, 720, "outsideIn");
+    InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "outsideIn");
+    ToggleFullscreen();
     SetTargetFPS(30);
     while (!WindowShouldClose()) {
       UpdateDraw();
