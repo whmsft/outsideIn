@@ -30,15 +30,15 @@ bool collideSideways(int x1, int y1, int w1, int h1, int x2, int y2, int w2, int
 }
 
 int main(void) {
-  //SetConfigFlags(FLAG_WINDOW_RESIZABLE);
+  SetConfigFlags(FLAG_WINDOW_RESIZABLE);
   playerAbove = true;
   #if defined(PLATFORM_WEB)
     InitWindow(320, 640, "outsideIn");
     emscripten_set_main_loop(UpdateDraw, 0, 1);
   #else
-    InitWindow(320, 640, "outsideIn");
-    //InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "outsideIn");
-    //ToggleFullscreen();
+    //InitWindow(320, 640, "outsideIn");
+    InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "outsideIn");
+    ToggleFullscreen();
     SetTargetFPS(30);
     while (!WindowShouldClose()) {
       UpdateDraw();
