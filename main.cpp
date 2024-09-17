@@ -97,12 +97,12 @@ void UpdateDraw(void) {
   
     // Object generation
     if (objectsAboveCooldown == 0) {
-      objectsAbove.push_back({ GetRandomValue(-screenWidth/20,screenWidth), 0, GetRandomValue(1,5) });
-      objectsAboveCooldown = GetRandomValue(1,40);
+      objectsAbove.push_back({ GetRandomValue(-screenWidth/20,screenWidth), 0, GetRandomValue(2,8) });
+      objectsAboveCooldown = GetRandomValue(1,30);
     }  
     if (objectsBelowCooldown == 0) {
-      objectsBelow.push_back({ GetRandomValue(-screenWidth/20,screenWidth), screenHeight, GetRandomValue(1,5) });
-      objectsBelowCooldown = GetRandomValue(1,40);
+      objectsBelow.push_back({ GetRandomValue(-screenWidth/20,screenWidth), screenHeight, GetRandomValue(2,8) });
+      objectsBelowCooldown = GetRandomValue(1,30);
     }
     
     BeginDrawing();
