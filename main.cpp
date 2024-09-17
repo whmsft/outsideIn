@@ -78,7 +78,7 @@ void UpdateDraw(void) {
       objectsAboveCooldown--;
     }
     DrawText("outsideIn",screenWidth/2-MeasureText("outsideIn",screenWidth/5)/2,screenHeight/4-screenHeight/20,screenWidth/5,SECONDARY);
-		DrawText("PLAY",screenWidth/2-MeasureText("PLAY",screenHeight/10)/2,0.75*screenHeight-screenWidth/10+screenHeight/2-otherVariables[2],screenHeight/10,PRIMARY);
+    DrawText("PLAY",screenWidth/2-MeasureText("PLAY",screenHeight/10)/2,0.75*screenHeight-screenWidth/10+screenHeight/2-otherVariables[2],screenHeight/10,PRIMARY);
     EndDrawing();
     if ((otherVariables[2]==screenHeight/2)&& collide(GetMouseX(), GetMouseY(), 1, 1, 0, screenHeight/2, screenWidth, screenHeight/2) && (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))) otherVariables[3]=1;
     if (otherVariables[3]==1 && objectsAbove.size()==0 && objectsBelow.size()==0) {
