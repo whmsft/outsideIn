@@ -55,7 +55,7 @@ void UpdateDraw(void) {
   if (SCREEN == 0) {
     BeginDrawing();
     ClearBackground(WHITE);
-    DrawText("outsideIn",screenWidth/2-MeasureText("outsideIn",screenWidth/5)/2,screenHeight/4-screenHeight/20,screenHeight/10,SECONDARY);
+    DrawText("outsideIn",screenWidth/2-MeasureText("outsideIn",screenWidth/5)/2,screenHeight/4-screenHeight/20,screenWidth/5,SECONDARY);
 		DrawRectangle(0,screenHeight/2,screenWidth,screenHeight/2,SECONDARY);
 		DrawText("PLAY",screenWidth/2-MeasureText("PLAY",screenHeight/10)/2,0.75*screenHeight-screenWidth/10,screenHeight/10,PRIMARY);
     EndDrawing();
@@ -139,7 +139,7 @@ void UpdateDraw(void) {
     playerAboveLastFrame=playerAbove;   
   } else if (SCREEN == 2) {
     BeginDrawing();
-    DrawRing(Vector2{playerX+screenWidth/40,playerY+screenWidth/40}, otherVariables[0], screenHeight, 0, 360, 640, PLAYER);
+    DrawRing(Vector2{playerX+screenWidth/40.0f,playerY+screenWidth/40.0f}, otherVariables[0], screenHeight, 0.0f, 360.0f, screenHeight, PLAYER);
     DrawText("Click anywhere",screenWidth/2-MeasureText("Click anywhere",screenWidth/10)/2,0.75*screenHeight,screenWidth/10,(playerY >= screenHeight / 2) ? SECONDARY : PRIMARY);
     DrawText(TextFormat("Score: %i",SCORE),5*moveSpeed,5*moveSpeed,10*moveSpeed,(playerY >= screenHeight / 2) ? SECONDARY : PRIMARY);
     EndDrawing();
