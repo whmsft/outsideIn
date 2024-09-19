@@ -142,13 +142,13 @@ void UpdateDraw(void) {
       object[1] -= object[2]*(screenWidth/100);
       DrawRectangle(object[0], object[1], screenWidth / 20, screenWidth / 20, PRIMARY);
       if (object[1] < screenHeight/2) {objectsBelow.erase(objectsBelow.begin() + i);} else {++i;}
-      if (collide(object[0],object[1],screenWidth/20,screenWidth/20,playerX,playerY,screenWidth/20,screenWidth/20)) {SCORE=0;frame=-1;SCREEN=2;otherVariables[0]=screenHeight;objectsAbove.clear();objectsBelow.clear();if(HIGHSCORE<SCORE)HIGHSCORE=SCORE;}
+      if (collide(object[0],object[1],screenWidth/20,screenWidth/20,playerX,playerY,screenWidth/20,screenWidth/20)) {SCORE=0;frame=-1;SCREEN=2;otherVariables[0]=screenHeight;if(HIGHSCORE<SCORE)HIGHSCORE=SCORE;}
     }
     for (auto i = 0; i < objectsAbove.size(); ) {auto& object = objectsAbove[i];
       object[1] += object[2]*(screenWidth/100);
       DrawRectangle(object[0], object[1], screenWidth / 20, screenWidth / 20, SECONDARY);
       if (object[1] > screenHeight/2-screenWidth/20) {objectsAbove.erase(objectsAbove.begin() + i);} else {++i;}
-      if (collide(object[0],object[1],screenWidth/20,screenWidth/20,playerX,playerY,screenWidth/20,screenWidth/20)) {SCORE=0;frame=-1;SCREEN=2;otherVariables[0]=screenHeight;objectsAbove.clear();objectsBelow.clear();if(HIGHSCORE<SCORE)HIGHSCORE=SCORE;}
+      if (collide(object[0],object[1],screenWidth/20,screenWidth/20,playerX,playerY,screenWidth/20,screenWidth/20)) {SCORE=0;frame=-1;SCREEN=2;otherVariables[0]=screenHeight;if(HIGHSCORE<SCORE)HIGHSCORE=SCORE;}
     }
     DrawRectangle(screenWidth / 4, screenHeight / 2, screenWidth / 2, screenWidth / 20, PRIMARY);
     DrawRectangle(screenWidth / 4, screenHeight / 2 - screenWidth / 20, screenWidth / 2, screenWidth / 20, SECONDARY);
