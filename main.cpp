@@ -1,4 +1,4 @@
-#include "raylib.h"
+#include "include/raylib.h"
 #include <vector>
 #if defined(PLATFORM_WEB)
   #include <emscripten/emscripten.h>
@@ -35,7 +35,7 @@ int main(void) {
   playerAbove = true;
   #if defined(PLATFORM_WEB)
     InitWindow(320, 640, "outsideIn");
-    emscripten_set_main_loop(UpdateDraw, 0, 1);
+    emscripten_set_main_loop(UpdateDraw, 30, 1);
   #else
     //InitWindow(360, 720, "outsideIn");
     InitWindow(GetMonitorWidth(GetCurrentMonitor()), GetMonitorHeight(GetCurrentMonitor()), "outsideIn");
@@ -56,7 +56,7 @@ void UpdateDraw(void) {
   BeginDrawing();
   if (SCREEN == 0) {
     ClearBackground(WHITE);
-    DrawRectangle(0,screenHeight-otherVariables[2],screenWidth,screenHeight/2,SECONDARY);
+    DrawRectangle(0,screenHeight-otherVariables[2],screenWidth,screenHeight,SECONDARY);
     if (otherVariables[2]<screenHeight/2){otherVariables[2]+=screenWidth/20;} else {otherVariables[2]=screenHeight/2;}
     if (otherVariables[2]==screenHeight/2) {
       if (objectsAboveCooldown == 0 && otherVariables[3]==0) {
@@ -82,7 +82,7 @@ void UpdateDraw(void) {
     DrawText("PLAY",screenWidth/2-MeasureText("PLAY",screenHeight/10)/2,0.75*screenHeight-screenWidth/10+screenHeight/2-otherVariables[2],screenHeight/10,PRIMARY);
     DrawText(TextFormat("Highscore: %i",HIGHSCORE),screenWidth/2-MeasureText(TextFormat("Highscore: %i",HIGHSCORE),8*(screenWidth/100))/2,0.75*screenHeight+screenWidth/10+screenHeight/2-otherVariables[2],8*(screenWidth/100),PRIMARY);
     DrawText("a game by whmsft",screenWidth/2-MeasureText("a game by whmsft",8*(screenWidth/100))/2,screenHeight-8*(screenWidth/100)-screenWidth/20,8*(screenWidth/100),PRIMARY);
-    if ((otherVariables[2]==screenHeight/2)&& collide(GetMouseX(), GetMouseY(), 1, 1, 0, screenHeight/2, screenWidth, screenHeight/2) && (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))) otherVariables[3]=1;
+    if ((otherVariables[2]==screenHeight/2)&& (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || IsGestureDetected(GESTURE_TAP))) otherVariables[3]=1;
     if (otherVariables[3]==1 && objectsAbove.size()==0 && objectsBelow.size()==0) {
       SCREEN = 1;
       objectsAbove.clear();
@@ -109,7 +109,7 @@ void UpdateDraw(void) {
   
     // Mouse/Touch/Keyboard input
     bool isRightHalf = (GetMouseX() >= screenWidth / 2 || GetTouchX() >= screenWidth / 2);
-    bool isLeftHalf = (GetMouseX() <= screenWidth / 2 || GetTouchX() <= screenWidth / 2); 
+    bool isLeftHalf = !(isRightHalf);
     bool collideRight = collideSideways(playerX-(screenWidth/100), playerY, screenWidth/20, screenWidth/20, screenWidth/4, screenHeight/2-screenWidth/20, screenWidth/2, screenWidth/10);
     bool collideLeft = collideSideways(playerX+(screenWidth/100), playerY, screenWidth/20, screenWidth/20, screenWidth/4, screenHeight/2-screenWidth/20, screenWidth/2, screenWidth/10);
     if ((((IsGestureDetected(GESTURE_HOLD) || IsMouseButtonDown(MOUSE_LEFT_BUTTON)) && isRightHalf) || IsKeyDown(KEY_RIGHT)) && !collideLeft) {
@@ -161,10 +161,17 @@ void UpdateDraw(void) {
     if (playerAboveLastFrame!=playerAbove) SCORE++;
     playerAboveLastFrame=playerAbove;   
   } else if (SCREEN == 2) {
+    ClearBackground(WHITE);
+    DrawRectangle(0, screenHeight / 2, screenWidth, screenHeight / 2, SECONDARY);
+    DrawRectangle(playerX, playerY, screenWidth / 20, screenWidth / 20, PLAYER);
+    for (auto i = 0; i < objectsBelow.size(); ) {auto& object = objectsBelow[i];DrawRectangle(object[0], object[1], screenWidth / 20, screenWidth / 20, PRIMARY);}
+    for (auto i = 0; i < objectsAbove.size(); ) {auto& object = objectsAbove[i];DrawRectangle(object[0], object[1], screenWidth / 20, screenWidth / 20, SECONDARY);}
+    DrawRectangle(screenWidth / 4, screenHeight / 2, screenWidth / 2, screenWidth / 20, PRIMARY);
+    DrawRectangle(screenWidth / 4, screenHeight / 2 - screenWidth / 20, screenWidth / 2, screenWidth / 20, SECONDARY);
     DrawRing(Vector2{playerX+screenWidth/40.0f,playerY+screenWidth/40.0f}, otherVariables[0], screenHeight, 0.0f, 360.0f, screenHeight, PLAYER);
     DrawText("Click anywhere",screenWidth/2-MeasureText("Click anywhere",screenWidth/10)/2,0.75*screenHeight,screenWidth/10,(playerY >= screenHeight / 2) ? SECONDARY : PRIMARY);
     DrawText(TextFormat("Score: %i",SCORE),5*(screenWidth/100),5*(screenWidth/100),10*(screenWidth/100),(playerY >= screenHeight / 2) ? SECONDARY : PRIMARY);
-    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) otherVariables[1]=1;
+    if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT) || IsGestureDetected(GESTURE_TAP)) otherVariables[1]=1;
     if (otherVariables[0]>screenWidth/4) otherVariables[0]-=screenWidth/10;
     if (otherVariables[1]==1) otherVariables[0]-=screenWidth/20;
     if (otherVariables[0]<screenWidth/20) {SCREEN=0;otherVariables[0]=0;otherVariables[1]=0;}
