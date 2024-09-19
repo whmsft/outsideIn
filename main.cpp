@@ -53,8 +53,8 @@ int main(void) {
 void UpdateDraw(void) {
   screenWidth = GetScreenWidth();
   screenHeight = GetScreenHeight();
+  BeginDrawing();
   if (SCREEN == 0) {
-    BeginDrawing();
     ClearBackground(WHITE);
     DrawRectangle(0,screenHeight-otherVariables[2],screenWidth,screenHeight/2,SECONDARY);
     if (otherVariables[2]<screenHeight/2){otherVariables[2]+=screenWidth/20;} else {otherVariables[2]=screenHeight/2;}
@@ -82,7 +82,6 @@ void UpdateDraw(void) {
     DrawText("PLAY",screenWidth/2-MeasureText("PLAY",screenHeight/10)/2,0.75*screenHeight-screenWidth/10+screenHeight/2-otherVariables[2],screenHeight/10,PRIMARY);
     DrawText(TextFormat("Highscore: %i",HIGHSCORE),screenWidth/2-MeasureText(TextFormat("Highscore: %i",HIGHSCORE),8*(screenWidth/100))/2,0.75*screenHeight+screenWidth/10+screenHeight/2-otherVariables[2],8*(screenWidth/100),PRIMARY);
     DrawText("a game by whmsft",screenWidth/2-MeasureText("a game by whmsft",8*(screenWidth/100))/2,screenHeight-8*(screenWidth/100)-screenWidth/20,8*(screenWidth/100),PRIMARY);
-    EndDrawing();
     if ((otherVariables[2]==screenHeight/2)&& collide(GetMouseX(), GetMouseY(), 1, 1, 0, screenHeight/2, screenWidth, screenHeight/2) && (IsMouseButtonPressed(MOUSE_BUTTON_LEFT))) otherVariables[3]=1;
     if (otherVariables[3]==1 && objectsAbove.size()==0 && objectsBelow.size()==0) {
       SCREEN = 1;
@@ -132,7 +131,6 @@ void UpdateDraw(void) {
       objectsBelowCooldown = GetRandomValue(1,30);
     }
     
-    BeginDrawing();
     ClearBackground(WHITE);
   
     // Draw game elements
@@ -157,21 +155,19 @@ void UpdateDraw(void) {
     // Debug info
     DrawText(TextFormat("Score: %i",SCORE),5*(screenWidth/100),5*(screenWidth/100),10*(screenWidth/100),SECONDARY);
   
-    EndDrawing();
     frame++;
     objectsBelowCooldown--;
     objectsAboveCooldown--;
     if (playerAboveLastFrame!=playerAbove) SCORE++;
     playerAboveLastFrame=playerAbove;   
   } else if (SCREEN == 2) {
-    BeginDrawing();
     DrawRing(Vector2{playerX+screenWidth/40.0f,playerY+screenWidth/40.0f}, otherVariables[0], screenHeight, 0.0f, 360.0f, screenHeight, PLAYER);
     DrawText("Click anywhere",screenWidth/2-MeasureText("Click anywhere",screenWidth/10)/2,0.75*screenHeight,screenWidth/10,(playerY >= screenHeight / 2) ? SECONDARY : PRIMARY);
     DrawText(TextFormat("Score: %i",SCORE),5*(screenWidth/100),5*(screenWidth/100),10*(screenWidth/100),(playerY >= screenHeight / 2) ? SECONDARY : PRIMARY);
-    EndDrawing();
     if (IsMouseButtonPressed(MOUSE_BUTTON_LEFT)) otherVariables[1]=1;
     if (otherVariables[0]>screenWidth/4) otherVariables[0]-=screenWidth/10;
     if (otherVariables[1]==1) otherVariables[0]-=screenWidth/20;
     if (otherVariables[0]<screenWidth/20) {SCREEN=0;otherVariables[0]=0;otherVariables[1]=0;}
   }
+  EndDrawing();
 }
